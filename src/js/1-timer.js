@@ -3,6 +3,8 @@ import 'flatpickr/dist/flatpickr.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
+const btnStart = document.querySelector('[data-start]');
+
 const iziToastOptions = {
   position: 'topRight',
 };
@@ -22,24 +24,25 @@ const flatPickrOptions = {
         title: 'Error',
         message: 'Please choose a date in the future',
       });
-      document.querySelector('[data-start]').disabled = true;
+      btnStart.disabled = true;
     } else {
-      document.querySelector('[data-start]').disabled = false;
+      btnStart.disabled = false;
     }
   },
 };
 
 flatpickr('#datetime-picker', flatPickrOptions);
 
-document.querySelector('[data-start]').addEventListener('click', () => {
-  const userSelectedDate = new Date(
-    document.querySelector('#datetime-picker').value
-  );
+const daysElement = document.querySelector('[data-days]');
+const hoursElement = document.querySelector('[data-hours]');
+const minutesElement = document.querySelector('[data-minutes]');
+const secondsElement = document.querySelector('[data-seconds]');
+const dateTimePicker = document.querySelector('#datetime-picker');
 
-  const daysElement = document.querySelector('[data-days]');
-  const hoursElement = document.querySelector('[data-hours]');
-  const minutesElement = document.querySelector('[data-minutes]');
-  const secondsElement = document.querySelector('[data-seconds]');
+btnStart.addEventListener('click', () => {
+  btnStart.disabled = true;
+  dateTimePicker.disabled = true;
+  const userSelectedDate = new Date(dateTimePicker.value);
 
   const updateTimer = () => {
     const difference = userSelectedDate - new Date();
@@ -50,6 +53,8 @@ document.querySelector('[data-start]').addEventListener('click', () => {
       hoursElement.textContent = '00';
       minutesElement.textContent = '00';
       secondsElement.textContent = '00';
+      btnStart.disabled = false;
+      dateTimePicker.disabled = false;
       return;
     }
 
@@ -62,8 +67,6 @@ document.querySelector('[data-start]').addEventListener('click', () => {
   };
 
   const timerInterval = setInterval(updateTimer, 1000);
-
-  document.querySelector('[data-start]').disabled = true;
 });
 
 function convertMs(ms) {
